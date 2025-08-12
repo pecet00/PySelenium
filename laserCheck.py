@@ -39,9 +39,14 @@ class LaserChecker:
             ).click()
             self.realValue.append(input("Value from gauge: "))
 
+            stat = statistic(self.realValue, table)      
+            prec = stat.prec() 
+            print("AVG:[%] " + prec)
+            print("Sum AVG[%] "+stat.avgPrec(prec))        
+            
             time.sleep(3)
-        calc = ProfitLossCalculator(table, self.realValue)
-        print(calc.calculate_percent_changes())
+
+        
 
 
 class TextualGui(App):
@@ -69,33 +74,27 @@ class TextualGui(App):
             else:
                 print("No IP address entered!")
 
-class ProfitLossCalculator:
-    def __init__(self, old_values: list, new_values: list):
-        if len(old_values) != len(new_values):
-            raise ValueError("Obie listy muszą mieć taką samą długość")
-
-        self.old_values = old_values
-        self.new_values = new_values
-
-    def calculate_changes(self):
-        return [new - old for old, new in zip(self.old_values, self.new_values)]
-
-    def calculate_percent_changes(self):
-        percent_changes = []
-        for old, new in zip(self.old_values, self.new_values):
-            if old == 0:
-                percent_changes.append(float('inf'))
-            else:
-                change = ((new - old) / old) * 100
-                percent_changes.append(change)
-        return percent_changes
-
-    def total_percent_change(self):
-        total_old = sum(self.old_values)
-        total_new = sum(self.new_values)
-        if total_old == 0:
-            return float('inf')
-        return ((total_new - total_old) / total_old) * 100
+class statistic:
+    def __init__(self, real, given):
+        self.real = real
+        self.given = given
+        self.delta = None
+    def difer(self):
+        self.delta = []
+        for i in range(len(self.given)):
+            holder = self.real[i] - self.given[i]
+            self.delta.append(holder)
+    def prec(self):
+        percents = []
+        if self.delta is None:
+            self.difer()
+        for i in range(len(self.delta)):
+            percHolder = (self.delta[i] / self.real[i] * 100)
+            percents.append(percHolder)
+        return(percents)
+    def avgPrec(self, percTab):
+        return(sum(percTab)/len(self.delta))
+        
 
 
 if __name__ == "__main__":
