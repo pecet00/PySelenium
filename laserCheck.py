@@ -41,10 +41,10 @@ class LaserChecker:
 
             stat = statistic(self.realValue, table)      
             prec = stat.prec() 
-            print("AVG:[%] " + prec)
-            print("Sum AVG[%] "+stat.avgPrec(prec))        
+        print("AVG:[%] " + prec)
+        print("Sum AVG[%] "+stat.avgPrec(prec))        
             
-            time.sleep(3)
+        time.sleep(3)
 
         
 
